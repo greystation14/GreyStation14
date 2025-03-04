@@ -136,7 +136,9 @@ public sealed partial class MeleeWeaponSystem
     {
         const float thrustEnd = 0.05f;
         const float length = 0.15f;
-        Angle.Zero += AngleZero;
+        var startOffset = sprite.Rotation.RotateVec(new Vector2(0f, -distance / 5f));
+        var endOffset = sprite.Rotation.RotateVec(new Vector2(0f, -distance));
+        sprite.Rotation += spriteRotation;
 
         return new Animation()
         {
