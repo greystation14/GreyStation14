@@ -44,7 +44,7 @@ public sealed partial class MeleeWeaponSystem
         }
 
         var spriteRotation = Angle.Zero;
-        if (arcComponent.Animation != WeaponArcAnimation.None
+        if (true // GreyStation - always copy sprite regardless of animation
             && TryComp(weapon, out MeleeWeaponComponent? meleeWeaponComponent))
         {
             if (user != weapon
@@ -57,7 +57,7 @@ public sealed partial class MeleeWeaponSystem
                 angle *= -1;
         }
         sprite.Rotation = localPos.ToWorldAngle();
-        var distance = Math.Clamp(localPos.Length() / 2f, 0.2f, 1f);
+        var distance = Math.Clamp(localPos.Length() / 2f, 0.3f, 2f); // GreyStation - changed min/max from 0.1/1
 
         var xform = _xformQuery.GetComponent(animationUid);
         TrackUserComponent track;
@@ -83,7 +83,9 @@ public sealed partial class MeleeWeaponSystem
                 var worldPos = mapPos + (mapRot - userXform.LocalRotation).RotateVec(localPos);
                 var newLocalPos = Vector2.Transform(worldPos, TransformSystem.GetInvWorldMatrix(xform.ParentUid));
                 TransformSystem.SetLocalPositionNoLerp(animationUid, newLocalPos, xform);
-                if (arcComponent.Fadeout)
+                _animation.Play(animationUid, GetThrustAnimation(sprite, distance, spriteRotation), ThrustAnimationKey); // GreyStation
+                sprite.Rotation = Angle.Zero; // GreyStation
+                if (true) // GreyStation - always fade
                     _animation.Play(animationUid, GetFadeAnimation(sprite, 0f, 0.15f), FadeAnimationKey);
                 break;
         }
@@ -137,7 +139,7 @@ public sealed partial class MeleeWeaponSystem
         const float thrustEnd = 0.05f;
         const float length = 0.15f;
         var startOffset = sprite.Rotation.RotateVec(new Vector2(0f, -distance / 5f));
-        var endOffset = sprite.Rotation.RotateVec(new Vector2(0f, -distance));
+        var endOffset = sprite.Rotation.RotateVec(new Vector2(0f, -distance * thrustEnd / length)); // GreyStation - scale it properly
         sprite.Rotation += spriteRotation;
 
         return new Animation()
@@ -174,7 +176,7 @@ public sealed partial class MeleeWeaponSystem
                     KeyFrames =
                     {
                         new AnimationTrackProperty.KeyFrame(sprite.Color, start),
-                        new AnimationTrackProperty.KeyFrame(sprite.Color.WithAlpha(0f), end)
+                        new AnimationTrackProperty.KeyFrame(sprite.Color.WithAlpha(0.5f), end) // GreyStation - 0.5 instead of 0
                     }
                 }
             }
