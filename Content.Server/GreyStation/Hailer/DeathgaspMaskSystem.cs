@@ -27,14 +27,15 @@ public sealed class DeathgaspMaskSystem : SharedDeathgaspMaskSystem
 
     private void OnToggled(Entity<DeathgaspMaskComponent> ent, ref ItemMaskToggledEvent args)
     {
-        if (args.IsToggled)
+        if (TryComp<MaskComponent>(ent, out var mask) && mask.IsToggled)
             Revert(ent.Comp, args.Wearer);
-        else
-            SetEmote(ent.Comp, args.Wearer);
+        else if (args.Wearer is {} wearer)
+            SetEmote(ent.Comp, wearer);
     }
 
-    private void Revert(DeathgaspMaskComponent comp, EntityUid user)
+    private void Revert(DeathgaspMaskComponent comp, EntityUid? user)
     {
+        user ??= comp.User;
         if (comp.PreviousPrototype is not {} previous)
             return;
 
@@ -49,6 +50,7 @@ public sealed class DeathgaspMaskSystem : SharedDeathgaspMaskSystem
         if (!TryComp<DeathgaspComponent>(user, out var deathgasp))
             return;
 
+        comp.User = user;
         comp.PreviousPrototype = deathgasp.Prototype;
         deathgasp.Prototype = comp.Prototype;
     }

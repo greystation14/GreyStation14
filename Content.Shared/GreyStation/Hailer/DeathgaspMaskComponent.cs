@@ -17,4 +17,10 @@ public sealed partial class DeathgaspMaskComponent : Component
     /// </summary>
     [DataField]
     public ProtoId<EmotePrototype>? PreviousPrototype;
+
+    /// <summary>
+    /// The entity currently wearing this mask.
+    /// </summary>
+    [DataField]
+    public EntityUid? User;
 }
