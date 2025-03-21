@@ -1,5 +1,6 @@
 using Content.Server.Mobs;
 using Content.Shared.Clothing;
+using Content.Shared.Clothing.Components;
 using Content.Shared.GreyStation.Hailer;
 
 namespace Content.Server.GreyStation.Hailer;
