@@ -113,7 +113,11 @@ namespace Content.Client.Gameplay
 
         private void LoadMainScreen()
         {
-            var screenType = ScreenType.Separated; // GreyStation: Ignore cvar and force separated hud
+            var screenTypeString = _configurationManager.GetCVar(CCVars.UILayout);
+            if (!Enum.TryParse(screenTypeString, out ScreenType screenType))
+            {
+                screenType = default;
+            }
 
             switch (screenType)
             {
