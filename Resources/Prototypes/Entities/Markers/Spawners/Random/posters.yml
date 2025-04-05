@@ -176,4 +176,5 @@
       - PosterLegitSafetyMothHardhat
       - PosterLegitSafetyMothSSD
       #- PosterLegitOppenhopper # GreyStation - Removed due to not pertaining to Grey Station
+      - PosterLegitTyrone
     chance: 1
